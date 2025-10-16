@@ -3,30 +3,9 @@ library(progress)
 library(ggsci)
 library(rtrim)
 
+# Eesti linnud
 
-# lisa liigikoodid
-
-ebi<-read_excel("src/Eesti linnud 20250211.xlsx") %>% filter(kat=="A"|ladnimi=="Columba livia") %>% rename(liik=`3+3`) %>% mutate(ord=1:nrow(.)) %>% select(liik,ladnimi,ord) %>%
-  mutate(
-    ladnimi=recode(ladnimi, "Buteo buteo vulpinus"="Buteo buteo")
-  )
-lnim <- read_csv("G:/analyys/20250722_bdart12/teatmik/lnim.csv") %>%
-  filter(is.na(`Rakendatav liik`)) %>%
-  select(Id,`Natura kood`,`EURING kood`,`Nimi eesti k`,`Nimi ladina k`) %>%
-  rename(eelis_id=Id,ladnimi=`Nimi ladina k`, species_code=`Natura kood`, euring=`EURING kood`) %>%
-  mutate(
-    ladnimi=recode(ladnimi, "Cygnus columbianus bewickii"="Cygnus columbianus"),
-    euring=gsub("^0","",euring),
-    euring=as.integer(euring),
-    euring==replace(euring, which(ladnimi=="Columba livia"), 6650)
-  )
-
-#ebi %>% left_join(lnim, by="ladnimi") %>%
-#  filter(is.na(eelis_id)) %>%
-#  view()
-
-eestilinnud<-ebi %>% left_join(lnim, by="ladnimi")
-
+load("data/eestilinnud.RData")
 
 
 # transektide trendid
